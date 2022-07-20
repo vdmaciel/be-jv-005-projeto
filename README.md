@@ -1,6 +1,6 @@
-# be-jv-003-projeto - Lets Code
+# be-jv-005-projeto - Lets Code
 
-Projeto do 3º módulo do curso realizado pela Lets Code.
+Projeto do 5º módulo do curso realizado pela Lets Code.
 
 ### Clonar o Projeto
 
