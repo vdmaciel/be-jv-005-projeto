@@ -8,9 +8,16 @@ import org.letscode.tecnicasprogramacao.services.ObterVinteMelhoresFilmesTerror;
 
 public class Aplicacao {
     public static void main(String[] args) {
+
         CarregarFilmes carregarFilmes = new CarregarFilmes();
         List<Filme> filmes = carregarFilmes.executar();
+
+        /* TODO usar Strategy para executar todos os serviços (/services) usando interface Processamento;
+            - Criar uma lista de todos os processamentos a executar
+            - forEch na lista passando os filmes carregados
+        * */
         ObterVinteMelhoresFilmesTerror obterVinteMelhoresFilmesTerror = new ObterVinteMelhoresFilmesTerror();
         List<Filme> melhoresFilmesTerror = obterVinteMelhoresFilmesTerror.executar(filmes);
+
     }
 }

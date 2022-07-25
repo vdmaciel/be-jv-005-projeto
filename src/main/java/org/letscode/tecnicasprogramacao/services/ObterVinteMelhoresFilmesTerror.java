@@ -1,6 +1,7 @@
 package org.letscode.tecnicasprogramacao.services;
 
 import org.letscode.tecnicasprogramacao.model.Filme;
+import org.letscode.tecnicasprogramacao.model.Processamento;
 
 import java.util.Comparator;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ObterVinteMelhoresFilmesTerror {
+public class ObterVinteMelhoresFilmesTerror implements Processamento<Filme> {
 
     public List<Filme> executar(List<Filme> filmes) {
         List<Filme> filmesTerror = filtrarMelhoresFilmesTerror(filmes);

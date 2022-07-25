@@ -1,9 +1,14 @@
 package org.letscode.tecnicasprogramacao.services;
 
-public class ObterCinquentaMelhoresFilmesPorAno {
+import org.letscode.tecnicasprogramacao.model.Filme;
+import org.letscode.tecnicasprogramacao.model.Processamento;
 
-    public void executar() {
+import java.util.List;
 
+public class ObterCinquentaMelhoresFilmesPorAno implements Processamento<Filme> {
+
+    @Override
+    public List<Filme> executar(List<Filme> filmes) {
+        return null;
     }
-    
 }
