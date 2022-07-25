@@ -5,7 +5,7 @@ Projeto do 4º módulo do curso realizado pela Lets Code.
 ### Clonar o Projeto
 
 ```git
-git clone https://github.com/vdmaciel/be-jv-003-projeto.git
+git clone https://github.com/vdmaciel/be-jv-005-projeto.git
 ```
 
 ## Configurações necessárias
