@@ -1,12 +1,11 @@
 package org.letscode.tecnicasprogramacao.services;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.letscode.tecnicasprogramacao.core.FileReader;
 import org.letscode.tecnicasprogramacao.model.Filme;
 
 public class CarregarFilmes {
@@ -39,28 +38,37 @@ public class CarregarFilmes {
 
     public List<Filme> executar() {
         System.out.println("Carregando filmes...");
+
         List<Filme> filmes = new ArrayList<>();
+        
+        //Array de threads de leitura
+        List<FileReader> threads = new ArrayList<>();
 
-        Path file1 = Path.of("src/main/resources/movies1.csv");
-        Path file2 = Path.of("src/main/resources/movies2.csv");
-        Path file3 = Path.of("src/main/resources/movies3.csv");
+        //Array de arquivos carregados por cada thread
+        threads.add(new FileReader("src/main/resources/movies1.csv"));
+        threads.add(new FileReader("src/main/resources/movies2.csv"));
+        threads.add(new FileReader("src/main/resources/movies3.csv"));
 
-        try {
-            Files.lines(file1).skip(1).forEach(line -> {
-                filmes.add(this.parseFilme(line));
-            });
-            System.out.println("Filmes do arquivo 1 carregados com sucesso!");
-            Files.lines(file2).forEach(line -> {
-                filmes.add(this.parseFilme(line));
-            });
-            System.out.println("Filmes do arquivo 2 carregados com sucesso!");
-            Files.lines(file3).forEach(line -> {
-                filmes.add(this.parseFilme(line));
-            });
-            System.out.println("Filmes do arquivo 3 carregados com sucesso!");
-        } catch (Exception e) {
-            System.out.println("Erro ao carregar filmes");
-            e.printStackTrace();
+        //Inicia as threads
+        for (FileReader thread : threads) {
+            thread.start();
+        }
+
+        List<String> linhas = new ArrayList<>();
+
+        //Espera todas as threads terminarem
+        for(FileReader thread : threads) {
+            try {
+                thread.join();
+                linhas.addAll(thread.getLines());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Para cada linha dos arquivos, cria um filme e adiciona a lista de filmes
+        for (String linha : linhas) {
+            filmes.add(parseFilme(linha));
         }
 
         return filmes;
