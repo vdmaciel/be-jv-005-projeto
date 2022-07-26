@@ -5,32 +5,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
-public class FileReader extends Thread {
-    private final String filePath;
-    private List<String> lines = new ArrayList<>();
+public class FileReader implements Callable<List<String>> {
+    private final Path path;
 
-    public FileReader(String filePath) {
-        this.filePath = filePath;
+    public FileReader(Path path) {
+        this.path = path;
     }
 
     @Override
-    public void run() {
+    public List<String> call() throws RuntimeException {
         try {
-            Files.lines(Path.of(filePath)).forEach(line -> {
-                // Ignora a primeira linha do arquivo, adiciona apenas as linhas que possuem índice
-                if(Character.isDigit(line.charAt(0))){
-                    lines.add(line);
-                }
-            });
-            System.out.println("Arquivo " + filePath + " lido com sucesso!");
+            List<String> lines = Files.lines(path)
+                    // Ignora a primeira linha do arquivo, adiciona apenas as linhas que possuem índice
+                    .skip(1)
+                    .parallel()
+                    .collect(Collectors.toList());
+            System.out.println("Arquivo " + path.getFileName() + " lido com sucesso!");
+
+            return lines;
         } catch (IOException e) {
-            System.out.println("Erro ao ler arquivo " + filePath);
+            System.out.println("Erro ao ler arquivo " + path.getFileName());
             e.printStackTrace();
         }
-    }
 
-    public List<String> getLines() {
-        return lines;
+        return new ArrayList<>();
     }
 }

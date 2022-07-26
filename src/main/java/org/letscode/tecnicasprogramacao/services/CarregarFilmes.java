@@ -1,8 +1,14 @@
 package org.letscode.tecnicasprogramacao.services;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -38,30 +44,30 @@ public class CarregarFilmes {
                 .build();
     }
 
-    public List<Filme> executar() {
+    public List<Filme> executar(List<Path> arquivos) throws InterruptedException {
         System.out.println("Carregando filmes...");
 
-        List<Filme> filmes = new ArrayList<>();
-
         //Array de threads de leitura
-        List<FileReader> threads = new ArrayList<>();
+        List<FileReader> threads =
+                arquivos
+                        .parallelStream()
+                        .map(FileReader::new)
+                        .collect(Collectors.toList());
 
-        //Array de arquivos carregados por cada thread
-        threads.add(new FileReader("src/main/resources/movies1.csv"));
-        threads.add(new FileReader("src/main/resources/movies2.csv"));
-        threads.add(new FileReader("src/main/resources/movies3.csv"));
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        List<Future<List<String>>> futures = executor.invokeAll(threads);
+
+        executor.shutdown();
 
         //Inicia as threads
-        return threads.parallelStream()
-                .map(thread -> {
-                    thread.run();
+        return futures.parallelStream()
+                .map(future -> {
                     try {
-                        //Espera todas as threads terminarem
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        return Stream.of(future.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(e);
                     }
-                    return Stream.of(thread.getLines());
                 })
                 .flatMap(Stream::distinct)
                 .flatMap(Collection::stream)
@@ -69,7 +75,7 @@ public class CarregarFilmes {
                 //Para cada linha dos arquivos, cria um filme e adiciona a lista de filmes
                 .map(this::parseFilme)
                 // Ordena os filmes
-                .sorted((f1, f2) -> Long.compare(f1.getRank(),f2.getRank()))
+                .sorted(Comparator.comparingLong(Filme::getRank))
                 .collect(Collectors.toList());
     }
 
