@@ -1,9 +1,12 @@
 package org.letscode.tecnicasprogramacao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.letscode.tecnicasprogramacao.model.Filme;
+import org.letscode.tecnicasprogramacao.model.Processamento;
 import org.letscode.tecnicasprogramacao.services.CarregarFilmes;
+import org.letscode.tecnicasprogramacao.services.ObterCinquentaMelhoresFilmesPorAno;
 import org.letscode.tecnicasprogramacao.services.ObterVinteMelhoresFilmesTerror;
 
 public class Aplicacao {
@@ -12,12 +15,12 @@ public class Aplicacao {
         CarregarFilmes carregarFilmes = new CarregarFilmes();
         List<Filme> filmes = carregarFilmes.executar();
 
-        /* TODO usar Strategy para executar todos os serviços (/services) usando interface Processamento;
-            - Criar uma lista de todos os processamentos a executar
-            - forEch na lista passando os filmes carregados
-        * */
-        ObterVinteMelhoresFilmesTerror obterVinteMelhoresFilmesTerror = new ObterVinteMelhoresFilmesTerror();
-        List<Filme> melhoresFilmesTerror = obterVinteMelhoresFilmesTerror.executar(filmes);
-
+        List<Processamento<Filme>> services = new ArrayList<>();
+        services.add(new ObterVinteMelhoresFilmesTerror());
+        services.add(new ObterCinquentaMelhoresFilmesPorAno());
+        
+        for (Processamento<Filme> service: services) {
+            service.executar(filmes);
+        }
     }
 }
