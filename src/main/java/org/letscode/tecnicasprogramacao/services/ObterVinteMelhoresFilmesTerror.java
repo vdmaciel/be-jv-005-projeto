@@ -1,5 +1,6 @@
 package org.letscode.tecnicasprogramacao.services;
 
+import org.letscode.tecnicasprogramacao.core.FileWrite;
 import org.letscode.tecnicasprogramacao.model.Filme;
 import org.letscode.tecnicasprogramacao.model.Processamento;
 
@@ -11,8 +12,10 @@ import java.util.stream.Collectors;
 
 public class ObterVinteMelhoresFilmesTerror implements Processamento<Filme> {
 
-    public List<Filme> executar(List<Filme> filmes) {
-        return filtrarMelhoresFilmesTerror(filmes);
+    public void executar(List<Filme> filmes) {
+        FileWrite writer = new FileWrite("src/main/resources/melhores_filmes_terror.txt");
+        writer.setLines(filtrarMelhoresFilmesTerror(filmes).parallelStream().map(f -> f.toString()).collect(Collectors.toList()));
+        writer.run(null);
     }
 
     private List<Filme> filtrarMelhoresFilmesTerror(List<Filme> filmes){
