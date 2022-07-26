@@ -1,6 +1,7 @@
 package org.letscode.tecnicasprogramacao.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,11 +63,11 @@ public class CarregarFilmes {
                     }
                     return Stream.of(thread.getLines());
                 })
-                .flatMap(stream -> stream.distinct())
-                .flatMap(lista -> lista.stream())
+                .flatMap(Stream::distinct)
+                .flatMap(Collection::stream)
                 .distinct()
                 //Para cada linha dos arquivos, cria um filme e adiciona a lista de filmes
-                .map(linha -> parseFilme(linha))
+                .map(this::parseFilme)
                 // Ordena os filmes
                 .sorted((f1, f2) -> Long.compare(f1.getRank(),f2.getRank()))
                 .collect(Collectors.toList());

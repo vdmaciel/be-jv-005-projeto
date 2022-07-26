@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 public class MetricaTempo {
     final private FileWrite file;
-    private HashMap<String, String> chave=new HashMap<>();
+    private final HashMap<String, String> chave=new HashMap<>();
     private List<String> lines;
-    private DateTimeFormatter formatoDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS");
+    private final DateTimeFormatter formatoDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS");
 
     public MetricaTempo(String filePath) {
         this.file = new FileWrite(filePath);

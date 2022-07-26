@@ -12,23 +12,16 @@ import java.util.stream.Collectors;
 public class ObterVinteMelhoresFilmesTerror implements Processamento<Filme> {
 
     public List<Filme> executar(List<Filme> filmes) {
-        List<Filme> filmesTerror = filtrarMelhoresFilmesTerror(filmes);
-        return filmesTerror;
+        return filtrarMelhoresFilmesTerror(filmes);
     }
 
     private List<Filme> filtrarMelhoresFilmesTerror(List<Filme> filmes){
-        List<Filme> filmesTerror = filmes.stream().filter(filme -> isTerror(filme)).sorted(new Comparator<Filme>() {
+        return filmes.stream().filter(this::isTerror).sorted(new Comparator<Filme>() {
             @Override
             public int compare(Filme o1, Filme o2) {
-                if (o1.getRank() < o2.getRank()){
-                    return -1;
-                } else if (o1.getRank() > o2.getRank()) {
-                    return 1;
-                }
-                return 0;
+                return o1.getRank() > o2.getRank() ? 1 : (o1.getRank() < o2.getRank() ? -1 : 0);
             }
         }).limit(20).collect(Collectors.toList());
-        return filmesTerror;
     }
 
     private boolean isTerror(Filme filme){
